@@ -1,0 +1,79 @@
+# Copyright 2019 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  id: Pull Helper Containers
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    docker pull gcr.io/$PROJECT_ID/cloudbuild-attestor:latest || exit 0
+
+- name: 'gcr.io/kaniko-project/executor'
+  id: Build
+  args: [
+    '--destination=gcr.io/$PROJECT_ID/frontend:$SHORT_SHA',
+    '--context=/workspace/src/frontend',
+    '--cache=true', '--cache-ttl=12h'
+    ]
+  waitFor: ['-']
+
+- name: gcr.io/$PROJECT_ID/cloudbuild-attestor
+  id: Check Vulnerability Scan Results
+  entrypoint: 'sh'
+  args:
+  - -xe
+  - -c
+  - |
+     /scripts/check_vulnerabilities.sh -p $PROJECT_ID -i gcr.io/$PROJECT_ID/frontend:$SHORT_SHA -t 5
+
+- name: 'gcr.io/$PROJECT_ID/cloudbuild-attestor'
+  id: '[Binary Authorization] Security Sign-off'
+  entrypoint: 'sh'
+  args:
+  - -xe
+  - -c
+  - |
+     FULLY_QUALIFIED_IMAGE=$(gcloud container images describe --format 'value(image_summary.fully_qualified_digest)' gcr.io/$PROJECT_ID/frontend:$SHORT_SHA)
+     /scripts/create_attestation.sh -n $_VULNZ_NOTE_ID -p $PROJECT_ID -i $$FULLY_QUALIFIED_IMAGE -b $PROJECT_ID-keys -r $_KMS_KEYRING  -k $_KMS_KEY
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: Generate k8s manifest
+  entrypoint: /bin/sh
+  args:
+  - '-c'
+  - |
+     DIGEST=$(gcloud container images describe --format 'value(image_summary.digest)' gcr.io/$PROJECT_ID/frontend:$SHORT_SHA)
+     sed "s|IMAGE|gcr.io/$PROJECT_ID/frontend@$${DIGEST}|g" kubernetes-manifests/frontend-deployment.yaml.tmpl > kubernetes-manifests/frontend-deployment.yaml
+
+# Change to the prod-cluster context this is needed because the build previously used the staging-cluster context.
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: Change to Prod Context
+  entrypoint: /bin/sh
+  timeout: 500s
+  args:
+  - '-c'
+  - |
+      gcloud container clusters get-credentials --project="$PROJECT_ID" --zone="$_COMPUTE_ZONE" "$_PROD_CLUSTER"
+
+- name: 'gcr.io/cloud-builders/kubectl'
+  id: Deploy to Production
+  args:
+  - 'apply'
+  - '-f'
+  - 'kubernetes-manifests/frontend-deployment.yaml'
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=$_COMPUTE_ZONE'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=$_PROD_CLUSTER'
