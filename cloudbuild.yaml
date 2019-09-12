@@ -28,52 +28,18 @@ steps:
   args:
   - '-c'
   - |
-    docker pull gcr.io/$PROJECT_ID/recommendationservice:cache || exit 0
-
-- name: 'gcr.io/cloud-builders/docker'
-  id: Pull Helper Containers
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
     docker pull gcr.io/cloud-builders/gcloud:latest
     docker pull gcr.io/$PROJECT_ID/cloudbuild-attestor:latest || exit 0
   waitFor: ['-']
 
-- name: 'gcr.io/cloud-builders/docker'
+- name: 'gcr.io/kaniko-project/executor'
   id: Build
-  args:
-  - 'build'
-  - '-t'
-  - 'gcr.io/$PROJECT_ID/recommendationservice:$SHORT_SHA'
-  - '--cache-from'
-  - 'gcr.io/$PROJECT_ID/recommendationservice:cache'
-  - '-f'
-  - 'src/recommendationservice/Dockerfile'
-  - 'src/recommendationservice'
-  waitFor: ['Pull Service Cache']
-
-- name: 'gcr.io/cloud-builders/docker'
-  id: Push labeled Image to GCR
-  args:
-    - 'push'
-    - 'gcr.io/$PROJECT_ID/recommendationservice:$SHORT_SHA'
-  waitFor: ['Build']
-
-#- name: 'gcr.io/cloud-builders/docker'
-#  id: Push un-labeled Image to GCR
-#  args:
-#    - 'push'
-#    - 'gcr.io/$PROJECT_ID/recommendationservice:latest'
-#  waitFor: ['Build']
-
-- name: 'gcr.io/cloud-builders/docker'
-  id: Tag Image with no explicit tag to use for future cache
-  args:
-  - 'tag'
-  - 'gcr.io/$PROJECT_ID/recommendationservice:$SHORT_SHA'
-  - 'gcr.io/$PROJECT_ID/recommendationservice:cache'
-  waitFor: ['Push labeled Image to GCR']
+  args: [
+    '--destination=gcr.io/$PROJECT_ID/frontend:$SHORT_SHA',
+    '--context=/workspace/src/frontend',
+    '--cache=true', '--cache-ttl=12h'
+    ]
+  waitFor: ['-']
 
 - name: gcr.io/$PROJECT_ID/cloudbuild-attestor
   id: Check Vulnerability Scan Results
