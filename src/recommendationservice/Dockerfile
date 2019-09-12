@@ -1,12 +1,12 @@
-#FROM python:2.7-slim
-#RUN apt-get update -qqy && \
-#    apt-get install -qqy wget g++ && \
-#    rm -rf /var/lib/apt/lists/*
-
-FROM python:2.7-alpine
-RUN apk update && \
-    apk add wget g++ && \
+FROM python:2.7-slim
+RUN apt-get update -qqy && \
+    apt-get install -qqy wget g++ && \
     rm -rf /var/lib/apt/lists/*
+
+#FROM python:2.7-alpine
+#RUN apk update && \
+#    apk add wget g++ && \
+#    rm -rf /var/lib/apt/lists/*
 
 # show python logs as they occur
 ENV PYTHONUNBUFFERED=0
