@@ -39,6 +39,7 @@ steps:
   args: 
   - '-c'
   - |
+    ls src/recommendationservice
     src/recommendationservice/build/run_build.sh
   waitFor: ['-']
 
