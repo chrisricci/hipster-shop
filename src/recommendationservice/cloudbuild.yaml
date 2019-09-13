@@ -42,7 +42,7 @@ steps:
      /scripts/check_vulnerabilities.sh -p $PROJECT_ID -i gcr.io/$PROJECT_ID/recommendationservice:$SHORT_SHA -t 5
 
 - name: 'gcr.io/$PROJECT_ID/cloudbuild-attestor'
-  id: '[Binary Authorization] Security Sign-off'
+  id: 'Security Sign-off'
   entrypoint: 'sh'
   args:
   - -xe
