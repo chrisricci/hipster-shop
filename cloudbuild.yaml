@@ -30,8 +30,8 @@ steps:
   args:
   - '-c'
   - |
-    ls -ltr /src/recommendationservice
-    /src/recommendationservice/tests/run_tests.sh
+    ls -ltr src/recommendationservice
+    src/recommendationservice/tests/run_tests.sh
   waitFor: ['-']
 
 - name: 'gcr.io/cloud-builders/docker'
