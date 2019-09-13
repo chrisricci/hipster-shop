@@ -13,16 +13,6 @@
 # limitations under the License.
 
 steps:
-#- name: 'gcr.io/cloud-builders/docker'
-#  id: Pull Service Cache
-#  entrypoint: 'bash'
-#  args:
-#  - '-c'
-#  - |
-#    docker pull gcr.io/cloud-builders/gcloud:latest
-#    docker pull gcr.io/$PROJECT_ID/cloudbuild-attestor:latest || exit 0
-#  waitFor: ['-']
-
 # Fake it til ya make it
 - name: 'gcr.io/cloud-builders/docker'
   id: Unit Test
