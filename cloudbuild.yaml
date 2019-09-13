@@ -30,7 +30,6 @@ steps:
   args:
   - '-c'
   - |
-    ls -ltr src/recommendationservice
     src/recommendationservice/tests/run_tests.sh
   waitFor: ['-']
 
