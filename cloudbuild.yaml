@@ -21,7 +21,6 @@ steps:
   - '-c'
   - |
     src/recommendationservice/tests/run_tests.sh
-  waitFor: ['-']
 
 - name: 'gcr.io/cloud-builders/docker'
   id: Build
@@ -30,7 +29,6 @@ steps:
   - '-c'
   - |
     src/recommendationservice/scripts/run_build.sh
-  waitFor: ['-']
 
 options:
   machineType: 'N1_HIGHCPU_8'
