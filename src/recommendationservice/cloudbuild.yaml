@@ -12,15 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-#- name: 'gcr.io/kaniko-project/executor'
-#  args: [
-#    '--destination=gcr.io/$PROJECT_ID/recommendationservice:$SHORT_SHA',
-#    '--context=/workspace/src/recommendationservice',
-#    '--cache=true', '--cache-ttl=06h'
-#  ]
-
-
 steps:
 - name: 'gcr.io/cloud-builders/docker'
   id: Pull Service Cache

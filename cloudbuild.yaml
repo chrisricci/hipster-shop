@@ -12,25 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-#- name: 'gcr.io/kaniko-project/executor'
-#  args: [
-#    '--destination=gcr.io/$PROJECT_ID/recommendationservice:$SHORT_SHA',
-#    '--context=/workspace/src/recommendationservice',
-#    '--cache=true', '--cache-ttl=06h'
-#  ]
-
-
 steps:
-- name: 'gcr.io/cloud-builders/docker'
-  id: Pull Service Cache
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    docker pull gcr.io/cloud-builders/gcloud:latest
-    docker pull gcr.io/$PROJECT_ID/cloudbuild-attestor:latest || exit 0
-  waitFor: ['-']
+#- name: 'gcr.io/cloud-builders/docker'
+#  id: Pull Service Cache
+#  entrypoint: 'bash'
+#  args:
+#  - '-c'
+#  - |
+#    docker pull gcr.io/cloud-builders/gcloud:latest
+#    docker pull gcr.io/$PROJECT_ID/cloudbuild-attestor:latest || exit 0
+#  waitFor: ['-']
 
 # Fake it til ya make it
 - name: 'gcr.io/cloud-builders/docker'
@@ -39,7 +30,7 @@ steps:
   args:
   - '-c'
   - |
-     sleep 5
+    src/recommendationservice/tests/run_tests.sh
   waitFor: ['-']
 
 - name: 'gcr.io/cloud-builders/docker'
@@ -48,7 +39,7 @@ steps:
   args: 
   - '-c'
   - |
-     sleep 10
+    src/recommendationservice/scripts/run_build.sh
   waitFor: ['-']
 
 options:
