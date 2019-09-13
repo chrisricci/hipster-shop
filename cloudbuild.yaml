@@ -30,7 +30,9 @@ steps:
   args:
   - '-c'
   - |
-     /src/recommendationservice/tests/run_tests.sh
+     ls -ltr
+     ls /
+     ls /workspace
   waitFor: ['-']
 
 - name: 'gcr.io/cloud-builders/docker'
