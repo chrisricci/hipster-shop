@@ -1,7 +1,7 @@
 # Mock Build
-for i in {1..5}; 
+for i in {1..3}; 
 do
     echo "Building..."
-    sleep 2
+    sleep 1
 done
 echo "Build Complete"
