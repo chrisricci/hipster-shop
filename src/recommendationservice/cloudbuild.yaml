@@ -33,12 +33,14 @@ steps:
   waitFor: ['-']
 
 - name: 'gcr.io/$PROJECT_ID/cloud-builders/sonarqube:v1'
+  id: Performing SonarQube scan
   args:
     - '-Dsonar.host.url=$_SONAR_HOST_URL'
     - '-Dsonar.login=$_SONAR_LOGIN'
     - '-Dsonar.projectKey=$_SONAR_PROJECTKEY'
     - '-Dsonar.organization=$_SONAR_ORGANIZATION'
     - '-Dsonar.sources=.'
+    - 'sonar.language=py'
   waitFor: ['-']
 
 - name: gcr.io/$PROJECT_ID/cloudbuild-attestor
