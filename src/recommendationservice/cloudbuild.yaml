@@ -39,7 +39,6 @@ steps:
     - '-Dsonar.projectKey=$_SONAR_PROJECTKEY'
     - '-Dsonar.organization=$_SONAR_ORGANIZATION'
     - '-Dsonar.sources=.'
-  tags: ['cloud-builders-community']
   waitFor: ['-']
 
 - name: gcr.io/$PROJECT_ID/cloudbuild-attestor
