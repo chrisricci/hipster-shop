@@ -39,7 +39,7 @@ steps:
     - '-Dsonar.login=$_SONAR_LOGIN'
     - '-Dsonar.projectKey=$_SONAR_PROJECTKEY'
     - '-Dsonar.organization=$_SONAR_ORGANIZATION'
-    - '-Dsonar.sources=.'
+    - '-Dsonar.sources=/workspace/src/recommendationservice'
     - '-Dsonar.language=py'
   waitFor: ['-']
 
