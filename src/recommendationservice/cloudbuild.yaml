@@ -33,7 +33,7 @@ steps:
   waitFor: ['-']
 
 - name: 'gcr.io/$PROJECT_ID/cloud-builders/sonarqube:v1'
-  id: Performing SonarQube scan
+  id: Perform SonarQube scan
   args:
     - '-Dsonar.host.url=$_SONAR_HOST_URL'
     - '-Dsonar.login=$_SONAR_LOGIN'
