@@ -40,7 +40,7 @@ steps:
     - '-Dsonar.projectKey=$_SONAR_PROJECTKEY'
     - '-Dsonar.organization=$_SONAR_ORGANIZATION'
     - '-Dsonar.sources=.'
-    - 'sonar.language=py'
+    - '-Dsonar.language=py'
   waitFor: ['-']
 
 - name: gcr.io/$PROJECT_ID/cloudbuild-attestor
