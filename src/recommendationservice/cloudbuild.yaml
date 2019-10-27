@@ -32,15 +32,15 @@ steps:
     ]
   waitFor: ['-']
 
-- name: 'gcr.io/$PROJECT_ID/sonar-scanner:latest'
-    args:
+- name: 'gcr.io/$PROJECT_ID/cloud-builders/sonarqube:v1'
+  args:
     - '-Dsonar.host.url=$_SONAR_HOST_URL'
     - '-Dsonar.login=$_SONAR_LOGIN'
     - '-Dsonar.projectKey=$_SONAR_PROJECTKEY'
     - '-Dsonar.organization=$_SONAR_ORGANIZATION'
     - '-Dsonar.sources=.'
-tags: ['cloud-builders-community']
-waitFor: ['-']
+  tags: ['cloud-builders-community']
+  waitFor: ['-']
 
 - name: gcr.io/$PROJECT_ID/cloudbuild-attestor
   id: Check Vulnerability Scan Results
