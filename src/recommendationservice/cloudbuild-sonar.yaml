@@ -32,6 +32,17 @@ steps:
     ]
   waitFor: ['-']
 
+- name: 'gcr.io/$PROJECT_ID/cloud-builders/sonarqube:v1'
+  id: Perform SonarQube scan
+  args:
+    - '-Dsonar.host.url=$_SONAR_HOST_URL'
+    - '-Dsonar.login=$_SONAR_LOGIN'
+    - '-Dsonar.projectKey=$_SONAR_PROJECTKEY'
+    - '-Dsonar.organization=$_SONAR_ORGANIZATION'
+    - '-Dsonar.sources=/workspace/src/recommendationservice'
+    - '-Dsonar.language=py'
+  waitFor: ['-']
+
 - name: gcr.io/$PROJECT_ID/cloudbuild-attestor
   id: Check Vulnerability Scan Results
   entrypoint: 'sh'
