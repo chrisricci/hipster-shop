@@ -49,7 +49,7 @@ steps:
   - -c
   - |
      FULLY_QUALIFIED_IMAGE=$(gcloud container images describe --format 'value(image_summary.fully_qualified_digest)' gcr.io/$PROJECT_ID/recommendationservice:$SHORT_SHA)
-     /scripts/create_attestation.sh -a $_VULNZ_NOTE_ID -p $PROJECT_ID -i $$FULLY_QUALIFIED_IMAGE -l $_KMS_LOCATION -r $_KMS_KEYRING  -k $_KMS_KEY
+     /scripts/create_attestation.sh -a $_VULNZ_NOTE_ID -p $PROJECT_ID -i $$FULLY_QUALIFIED_IMAGE -l $_KMS_LOCATION -r $_KMS_KEYRING  -k $_KMS_KEY -v $_KMS_KEY_VERSION
 
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Generate k8s manifest
