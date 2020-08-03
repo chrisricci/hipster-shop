@@ -74,6 +74,8 @@ steps:
   id: Deploy to Production
   args:
   - 'apply'
+  - '-n'
+  - 'hipster'
   - '-f'
   - 'kubernetes-manifests/recommendations.yaml'
   env:
